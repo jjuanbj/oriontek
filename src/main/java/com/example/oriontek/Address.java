@@ -1,7 +1,5 @@
 package com.example.oriontek;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -12,7 +10,6 @@ public class Address {
 
     @Id
     @GeneratedValue
-    @JsonIgnore
     private long id;
 
     @Column(nullable = false)

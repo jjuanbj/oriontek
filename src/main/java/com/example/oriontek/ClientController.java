@@ -1,11 +1,16 @@
 package com.example.oriontek;
 
+import com.example.oriontek.request.AddAddressRequest;
+import com.example.oriontek.request.SaveClientRequest;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,8 +24,11 @@ public class ClientController {
 
     private final ClientService service;
 
+    private final ObjectMapper mapper;
+
     public ClientController(ClientService service) {
         this.service = service;
+        this.mapper = new ObjectMapper();
     }
 
     @GetMapping("/id/{id}")
@@ -43,8 +51,14 @@ public class ClientController {
     }
 
     @PostMapping("/save")
-    public ResponseEntity<?> saveClient(@Valid @RequestBody Client client) {
+    public ResponseEntity<?> saveClient(@Valid @RequestBody SaveClientRequest client) throws JsonProcessingException {
 
-        return ResponseEntity.status(HttpStatus.OK).body(service.saveClient(client));
+        return ResponseEntity.status(HttpStatus.OK).body(service.saveClient(mapper.readValue(mapper.writeValueAsString(client), Client.class)));
+    }
+
+    @PutMapping("/addAddress")
+    public ResponseEntity<?> addAddressByClientId(@Valid @RequestBody AddAddressRequest client) throws JsonProcessingException {
+
+        return ResponseEntity.status(HttpStatus.OK).body(service.addAddressByClientId(mapper.readValue(mapper.writeValueAsString(client), Client.class)));
     }
 }

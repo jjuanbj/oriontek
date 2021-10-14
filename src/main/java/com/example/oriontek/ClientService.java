@@ -3,7 +3,6 @@ package com.example.oriontek;
 import com.example.oriontek.exceptions.RecordNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -52,27 +51,37 @@ public class ClientService {
             throw new IllegalArgumentException("Request cannot be null");
         }
 
-        var clients = repository.findByName(client.getName());
+        repository.save(client);
 
-        if (!clients.isEmpty()) {
-            client.setId(clients.get(0).getId());
+        return Optional.of(true);
+    }
 
-            var clientsAddresses = clients.get(0).getAddress();
+    public Optional<Boolean> addAddressByClientId(Client client){
 
-            for (var address: client.getAddress()) {
-                for (var clientAddress: clientsAddresses) {
-                    if (address.getLocation().equals(clientAddress.getLocation())){
-                        address.setId(clientAddress.getId());
-                    }
+        if (Objects.isNull(client)) {
+            throw new IllegalArgumentException("Request cannot be null");
+        }
+
+        var clientSearched = repository.findById(client.getId());
+
+        if (clientSearched.isEmpty()) {
+            throw new RecordNotFoundException();
+        }
+
+        var oldClientsAddresses = clientSearched.get().getAddress();
+
+        for (var newAddress: client.getAddress()) {
+            for (var clientAddress: oldClientsAddresses) {
+                if (newAddress.getLocation().equals(clientAddress.getLocation())){
+                    throw new IllegalArgumentException("Cannot add address with same previous location");
                 }
             }
 
-            Set<Address> allAddresses = new HashSet<>(clientsAddresses);
-
-            allAddresses.addAll(client.getAddress());
-
-            client.setAddress(allAddresses);
+            oldClientsAddresses.add(newAddress);
         }
+
+        client.setName(clientSearched.get().getName());
+        client.setAddress(oldClientsAddresses);
 
         repository.save(client);
 
