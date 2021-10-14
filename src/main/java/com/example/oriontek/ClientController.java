@@ -44,6 +44,12 @@ public class ClientController {
         return ResponseEntity.status(HttpStatus.OK).body(service.getClientsByName(name));
     }
 
+    @GetMapping("/clients-location/{location}")
+    public ResponseEntity<?> getClientsByLocation(@PathVariable(name = "location") String location) {
+
+        return ResponseEntity.status(HttpStatus.OK).body(service.getClientsByLocation(location));
+    }
+
     @GetMapping("/all")
     public ResponseEntity<?> getAllClients() {
 

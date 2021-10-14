@@ -38,6 +38,17 @@ public class ClientService {
         return clients;
     }
 
+    public List<Client> getClientsByLocation(String location){
+
+        var clients = repository.findClientsByAddress_Location(location);
+
+        if (clients.isEmpty()) {
+            throw new RecordNotFoundException();
+        }
+
+        return clients;
+    }
+
     public List<Client> getAllClients(){
 
         return repository.findAll();
