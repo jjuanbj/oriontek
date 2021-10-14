@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Validated
 @RestController
@@ -62,9 +64,19 @@ public class ClientController {
         return ResponseEntity.status(HttpStatus.OK).body(service.saveClient(mapper.readValue(mapper.writeValueAsString(client), Client.class)));
     }
 
-    @PutMapping("/addAddress")
+    @PutMapping("/add-address")
     public ResponseEntity<?> addAddressByClientId(@Valid @RequestBody AddAddressRequest client) throws JsonProcessingException {
 
         return ResponseEntity.status(HttpStatus.OK).body(service.addAddressByClientId(mapper.readValue(mapper.writeValueAsString(client), Client.class)));
+    }
+
+    @PutMapping("/update-client-name/{id}/new-name/{name}")
+    public ResponseEntity<?> updateClientNameById(@PathVariable(name = "id") @NotNull Long id,
+                                                  @PathVariable(name = "name") @NotNull @Size(min = 3, max = 40) String name) {
+
+        return ResponseEntity.status(HttpStatus.OK).body(service.updateClientNameById(new Client() {{
+            setId(id);
+            setName(name);
+        }}));
     }
 }

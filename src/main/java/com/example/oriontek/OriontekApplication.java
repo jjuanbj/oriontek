@@ -1,5 +1,6 @@
 package com.example.oriontek;
 
+import com.example.oriontek.repository.ClientRepository;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;

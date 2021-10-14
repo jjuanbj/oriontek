@@ -1,5 +1,6 @@
-package com.example.oriontek;
+package com.example.oriontek.repository;
 
+import com.example.oriontek.Client;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

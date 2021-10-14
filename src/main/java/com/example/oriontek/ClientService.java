@@ -1,6 +1,8 @@
 package com.example.oriontek;
 
 import com.example.oriontek.exceptions.RecordNotFoundException;
+import com.example.oriontek.repository.AddressRepository;
+import com.example.oriontek.repository.ClientRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,15 +12,18 @@ import java.util.Optional;
 @Service
 public class ClientService {
 
-    public final ClientRepository repository;
+    public final ClientRepository clientRepository;
 
-    public ClientService(ClientRepository repository) {
-        this.repository = repository;
+    public final AddressRepository addressRepository;
+
+    public ClientService(ClientRepository clientRepository, AddressRepository addressRepository) {
+        this.clientRepository = clientRepository;
+        this.addressRepository = addressRepository;
     }
 
     public Optional<Client> getClientById(Long id) {
 
-        var job = repository.findById(id);
+        var job = clientRepository.findById(id);
 
         if (job.isEmpty()) {
             throw new RecordNotFoundException();
@@ -29,7 +34,7 @@ public class ClientService {
 
     public List<Client> getClientsByName(String name){
 
-        var clients = repository.findByName(name);
+        var clients = clientRepository.findByName(name);
 
         if (clients.isEmpty()) {
             throw new RecordNotFoundException();
@@ -40,7 +45,7 @@ public class ClientService {
 
     public List<Client> getClientsByLocation(String location){
 
-        var clients = repository.findClientsByAddress_Location(location);
+        var clients = clientRepository.findClientsByAddress_Location(location);
 
         if (clients.isEmpty()) {
             throw new RecordNotFoundException();
@@ -51,7 +56,7 @@ public class ClientService {
 
     public List<Client> getAllClients(){
 
-        return repository.findAll();
+        return clientRepository.findAll();
     }
 
     public Optional<Boolean> saveClient(Client client){
@@ -60,7 +65,7 @@ public class ClientService {
             throw new IllegalArgumentException("Request cannot be null");
         }
 
-        repository.save(client);
+        clientRepository.save(client);
 
         return Optional.of(true);
     }
@@ -71,7 +76,7 @@ public class ClientService {
             throw new IllegalArgumentException("Request cannot be null");
         }
 
-        var clientSearched = repository.findById(client.getId());
+        var clientSearched = clientRepository.findById(client.getId());
 
         if (clientSearched.isEmpty()) {
             throw new RecordNotFoundException();
@@ -92,7 +97,26 @@ public class ClientService {
         client.setName(clientSearched.get().getName());
         client.setAddress(oldClientsAddresses);
 
-        repository.save(client);
+        clientRepository.save(client);
+
+        return Optional.of(true);
+    }
+
+    public Optional<Boolean> updateClientNameById(Client client){
+
+        if (Objects.isNull(client)) {
+            throw new IllegalArgumentException("Request cannot be null");
+        }
+
+        var clientSearched = clientRepository.findById(client.getId());
+
+        if (clientSearched.isEmpty()) {
+            throw new RecordNotFoundException();
+        }
+
+        clientSearched.get().setName(client.getName());
+
+        clientRepository.save(clientSearched.get());
 
         return Optional.of(true);
     }
