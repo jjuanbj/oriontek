@@ -3,11 +3,9 @@ package com.example.oriontek;
 import com.example.oriontek.exceptions.RecordNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 public class ClientService {
