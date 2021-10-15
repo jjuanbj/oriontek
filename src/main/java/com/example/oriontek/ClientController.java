@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -78,5 +79,17 @@ public class ClientController {
             setId(id);
             setName(name);
         }}));
+    }
+
+    @DeleteMapping("/delete-client/id/{id}")
+    public ResponseEntity<?> deleteClientById(@PathVariable(name = "id") @NotNull Long id) {
+
+        return ResponseEntity.status(HttpStatus.OK).body(service.deleteClientById(id));
+    }
+
+    @DeleteMapping("/delete-client/name/{name}")
+    public ResponseEntity<?> deleteClientByName(@PathVariable(name = "name") @NotNull String name) {
+
+        return ResponseEntity.status(HttpStatus.OK).body(service.deleteClientByName(name));
     }
 }

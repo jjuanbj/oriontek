@@ -120,4 +120,28 @@ public class ClientService {
 
         return Optional.of(true);
     }
+
+    public Optional<Boolean> deleteClientById(Long id){
+
+        if (clientRepository.findById(id).isEmpty()) {
+            throw new RecordNotFoundException();
+        }
+
+        clientRepository.deleteById(id);
+
+        return Optional.of(true);
+    }
+
+    public Optional<Boolean> deleteClientByName(String name){
+
+        var client = clientRepository.findByName(name);
+
+        if (client.isEmpty()) {
+            throw new RecordNotFoundException();
+        }
+
+        clientRepository.deleteById(client.get(0).getId());
+
+        return Optional.of(true);
+    }
 }
